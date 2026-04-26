@@ -30,6 +30,9 @@ import (
 // CreateBuilderOptions is a configuration object used to change the behavior of
 // CreateBuilder.
 type CreateBuilderOptions struct {
+	// A flag to skip run image validation.
+	SkipValidateRunImage bool
+
 	// The base directory to use to resolve relative assets
 	RelativeBaseDir string
 
@@ -158,8 +161,10 @@ func (c *Client) validateConfig(ctx context.Context, opts CreateBuilderOptions, 
 		return errors.Wrap(err, "invalid builder config")
 	}
 
-	if err := c.validateRunImageConfig(ctx, opts, target); err != nil {
-		return errors.Wrap(err, "invalid run image config")
+	if !opts.SkipValidateRunImage {
+		if err := c.validateRunImageConfig(ctx, opts, target); err != nil {
+			return errors.Wrap(err, "invalid run image config")
+		}
 	}
 
 	return nil

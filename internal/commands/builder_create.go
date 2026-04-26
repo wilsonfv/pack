@@ -19,6 +19,7 @@ import (
 
 // BuilderCreateFlags define flags provided to the CreateBuilder command
 type BuilderCreateFlags struct {
+	SkipValidateRunImage  bool
 	Publish               bool
 	AppendImageNameSuffix bool
 	BuilderTomlPath       string
@@ -127,6 +128,7 @@ Creating a custom builder allows you to control what buildpacks are used and wha
 				Targets:               multiArchCfg.Targets(),
 				TempDirectory:         tempDir,
 				AdditionalTags:        flags.AdditionalTags,
+				SkipValidateRunImage:  flags.SkipValidateRunImage,
 			}); err != nil {
 				return err
 			}
@@ -153,6 +155,7 @@ Creating a custom builder allows you to control what buildpacks are used and wha
 - To specify multiple distribution versions: '--target "linux/arm/v6:ubuntu@14.04"  --target "linux/arm/v6:ubuntu@16.04"'
 	`)
 	cmd.Flags().StringSliceVarP(&flags.AdditionalTags, "tag", "", nil, "Additional tags to push the output image to.\nTags should be in the format 'image:tag' or 'repository/image:tag'."+stringSliceHelp("tag"))
+	cmd.Flags().BoolVar(&flags.SkipValidateRunImage, "skip-validate-run-image", false, "Skip validation of run image")
 
 	AddHelpFlag(cmd, "create")
 	return cmd

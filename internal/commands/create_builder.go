@@ -63,12 +63,13 @@ Creating a custom builder allows you to control what buildpacks are used and wha
 
 			imageName := args[0]
 			if err := pack.CreateBuilder(cmd.Context(), client.CreateBuilderOptions{
-				RelativeBaseDir: relativeBaseDir,
-				BuilderName:     imageName,
-				Config:          builderConfig,
-				Publish:         flags.Publish,
-				Registry:        flags.Registry,
-				PullPolicy:      pullPolicy,
+				RelativeBaseDir:      relativeBaseDir,
+				BuilderName:          imageName,
+				Config:               builderConfig,
+				Publish:              flags.Publish,
+				Registry:             flags.Registry,
+				PullPolicy:           pullPolicy,
+				SkipValidateRunImage: flags.SkipValidateRunImage,
 			}); err != nil {
 				return err
 			}
@@ -85,5 +86,6 @@ Creating a custom builder allows you to control what buildpacks are used and wha
 	cmd.Flags().StringVarP(&flags.BuilderTomlPath, "config", "c", "", "Path to builder TOML file (required)")
 	cmd.Flags().BoolVar(&flags.Publish, "publish", false, "Publish the builder directly to the container registry specified in <image-name>, instead of the daemon.")
 	cmd.Flags().StringVar(&flags.Policy, "pull-policy", "", "Pull policy to use. Accepted values are always, never, and if-not-present. The default is always")
+	cmd.Flags().BoolVar(&flags.SkipValidateRunImage, "skip-validate-run-image", false, "Skip validation of run image")
 	return cmd
 }
